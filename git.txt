@@ -8,9 +8,37 @@ cheatsheet
 -------------------------
 
 
+add <file_name>		<file_name>で指定したファイルをステージする
+	-A							新規作成・修正済み・削除ファイルを全てステージする
+
+branch							ローカルリポジトリのブランチ一覧を表示する
+	<branch_name>			<branch_name>というブランチを作成する
+	-d <branch_name>	<branch_name>というブランチを削除する。ただし、masterへマージされていないものは削除できない。
+	-D <branch_name>	<branch_name>というブランチを、masterへのマージ如何にかかわらず削除する。危険。
+	-v								ブランチ一覧を最終コミットについての情報を含めて表示する
+	-vv								ブランチ一覧を各ブランチの追跡先ブランチと、リモートとの差異の情報を含めて表示する
+	--merged					マージ済みブランチ一覧の表示
+	--no-merged				未マージブランチ一覧の表示
+
+checkout <file> 										fileを修正済み状態から最終コミットの状態に戻す。
+	<pointer_name> 										HEADの位置を<pointer_name>が指すポインタの地点に切り替える。コミットハッシュ・ブランチ名などを指定出来る
+	-b <branch_name>									新たに<branch_name>という名称でブランチを作成し、そのブランチにHEADの位置を切り替える
+	-b <local_branch> <remote_branch>	<remote_branch>を<local_branch>という名前のローカルブランチとして取得して、そのブランチに切り替える
+	--track <remote_branch>						一個上のコマンドと同じ。
 
 clone <url> [dir]	urlで指定したリポジトリをローカルへクローンする
 									dirで指定したディレクトリ名でクローンすることが可能
+
+commit		ステージ済みファイルをコミットする
+	-m			コミットメッセージを指定してコミット
+	-a			修正済みファイルを全てステージしたものとみなしてコミット
+	--amend	現在のステージ済みファイルで一個前のコミットをやり直す
+
+fetch						リモートとローカルのリポジトリを同期させる
+	<remote_name>	<remote_name>で指定したリモートリポジトリと同期させる
+
+init			現在のディレクトリをgitリポジトリとして初期化する
+	--bare	現在のディレクトリをgitのリモートリポジトリとして初期化する
 
 log	履歴を確認する
 	--stat					変更されたファイルの一覧と数、追加・削除された行数を表示。 また、それらの情報のまとめを最後に出力
@@ -27,37 +55,34 @@ log	履歴を確認する
 	--name-status		変更されたファイルと 追加/修正/削除 情報を表示する
 	--abbrev-commit	SHA-1 チェックサムの全体 (40文字) ではなく最初の数文字のみを表示する
 	--relative-date	完全な日付フォーマットではなく、相対フォーマット (“2 weeks ago” など) で日付を表示する
+	--decorate			ブランチポインタの位置を表示する
 
-add	ファイルをステージする
-	-A	新規作成・修正済み・削除ファイルを全てステージする
+ls-remote <remote_name>	<remote_name>のリモートリポジトリのブランチ情報を取得する
 
-status	リポジトリの状態を確認する
-	-s	ファイル名のみの情報を出力する
+merge <branch_name>			現在のブランチに、<branch_name>のブランチをマージする
+	--no-ff <branch_name>	<branch_name>のブランチをマージするが、fast-forward状態であっても必ずマージコミットを作成する。
 
-commit	ステージ済みファイルをコミットする
-	-m	コミットメッセージを指定してコミット
-	-a	修正済みファイルを全てステージしたものとみなしてコミット
-	--amend	現在のステージ済みファイルで一個前のコミットをやり直す
-
-rm	削除されたファイルをステージする
-	--cached <file> fileの実体を削除せずに、Gitリポジトリ上では削除したものとしてステージする
-	
 mv <file_from> <file_to>	file_fromからfile_toへファイルの移動をおこなう
+
+pull	現在のローカルブランチに追跡先ブランチの最新のものをマージする。要はリモートを取得する
+
+push																				現在のローカルブランチを追跡先ブランチの最新のものへマージして反映させる。要はリモートへ反映させる。
+	<remote_name> <branch_name>								<remote_name>で指定したリモートリポジトリへ<branch_name>ブランチをプッシュする
+	<remote> <local_branch>:<remote_branch>		<remote>のリモートリポジトリに<local_branch>を<remote_branch>という名前でプッシュする
+	-u <remote_name> <branch_name>						<remote_name>の<branch_name>ブランチを現在のブランチの追跡先ブランチとして設定する
+
+remote								リモートリポジトリを表示したりする
+	-v									リモートリポジトリをURL込みで表示する
+	add <remote_name>		<remote_url> remote_nameという名称でremote_urlをリモートリポジトリとして登録する
+	show								リモートリポジトリの情報を取得する
+	show <remote_name>	<remote_name>のリモートリポジトリの情報をより詳しく取得する。手元との歴史の差分など。
 
 reset	<file>	fileをステージ済み状態から修正済み状態にする。
 ※resetコマンドはインデックスやHEADなど、リポジトリの状態のポインタを操作するもので、用途は多数あります。
 これ以上のコマンドはここに書いちゃうと事故の元のような気しかしないので省きます
- 
-checkout <file> fileを修正済み状態から最終コミットの状態に戻す。
 
-remote	リモートリポジトリを表示したりする
-	-v	リモートリポジトリをURL込みで表示する
-	add <remote_name> <remote_url> remote_nameという名称でremote_urlをリモートリポジトリとして登録する
-	show	リモートリポジトリの情報を取得する
+rm								削除されたファイルをステージする
+	--cached <file> fileの実体を削除せずに、Gitリポジトリ上では削除したものとしてステージする
 
-fetch	リモートとローカルのリポジトリを同期させる
-
-pull	現在のローカルブランチに追跡先ブランチの最新のものをマージする。要はリモートを取得する
-
-push	現在のローカルブランチを追跡先ブランチの最新のものへマージして反映させる。要はリモートへ反映させる。
-	-u <remote_name> <branch_name>	remote_nameのbranch_nameブランチを現在のブランチの追跡先ブランチとして設定する
+status	リポジトリの状態を確認する
+	-s		ファイル名のみの情報を出力する
